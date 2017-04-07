@@ -4,7 +4,7 @@
  * This program implements a interface for playing Liars Dice.
  *
  * Liars Dice is played where every player rolls 5 dice, with the values known only to the player who rolled.
- * The Players then take turns guessing how many of a face of the die is present in all the die combined, 
+ * The Players then take turns guessing how many of a face of the die is present in all the die combined,
  * including the dice of the other players, which are unknown values. The next player can either claim that there is
  * a higher number of die, or keep the number the same and increase the number of the face of the die.
  * For example, Player 1 says "four 5s"; Player 2 can either say "five 5s, (or any number greater than 5)", or
@@ -55,6 +55,8 @@ public class LiarClientHandler implements Runnable
 				DataOutputStream localOutput = new DataOutputStream(connectionSock.getOutputStream());
 
 				localOutput.writeBytes("Welcome to Liar's Dice!" +"\n");
+				localOutput.writeBytes("Input the amount of dice you would like to roll in 1,3 format meaning there is one 3 faced di"
+				+ "\n");
 
 			while (true)
 			{
@@ -100,4 +102,4 @@ public class LiarClientHandler implements Runnable
 			socketList.remove(connectionSock);
 		}
 	}
-} // ClientHandler for NimServer.java
+} // ClientHandler for LiarServer.java
