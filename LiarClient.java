@@ -1,15 +1,20 @@
 /**
- * NimClient.java
+ * LiarClient.java
  *
- * This program implements a simple multithreaded chat client.  It connects to the
- * server (assumed to be localhost on port 7654) and starts two threads:
- * one for listening for data sent from the server, and another that waits
- * for the user to type something in that will be sent to the server.
- * Anything sent to the server is broadcast to all clients.
+ * This program implements a interface for playing Liars Dice.
  *
- * The MTClient uses a ClientListener whose code is in a separate file.
- * The ClientListener runs in a separate thread, recieves messages form the server,
- * and displays them on the screen.
+ * Liars Dice is played where every player rolls 5 dice, with the values known only to the player who rolled.
+ * The Players then take turns guessing how many of a face of the die is present in all the die combined, 
+ * including the dice of the other players, which are unknown values. The next player can either claim that there is
+ * a higher number of die, or keep the number the same and increase the number of the face of the die.
+ * For example, Player 1 says "four 5s"; Player 2 can either say "five 5s, (or any number greater than 5)", or
+ * "four 6s"
+ * If the player thinks the previous player is wrong/lying, they can call their bluff and if they are right, the first
+ * player loses a die. If the they are wrong, than the person calling the bluff loses a die.
+ *
+ * The game continues until only one player has die left.
+ *
+ * Authors: Jed Klein and Connor Ford
  *
  * Data received is sent to the output screen, so it is possible that as
  * a user is typing in information a message from the server will be
