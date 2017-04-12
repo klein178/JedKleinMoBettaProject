@@ -1,0 +1,10 @@
+What I want to accomplish still:
+-Implement a dice method with an int of di remaining as the parameter
+-Definitevly cap off the network at 5 players
+
+What I've accomplished so far: 
+-Put in client and server with welcome message and ability for player to make inital bet
+
+Challenges:
+-Time
+-Coding the game over the server as opposed to locally
