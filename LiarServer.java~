@@ -85,7 +85,7 @@ public class LiarServer
 
 
 					// Send to ClientHandler the socket and arraylist of all sockets
-					LiarClientHandler handler = new LiarClientHandler(connectionSock, this.socketList, this.totalDice, this.total);
+					LiarClientHandler handler = new LiarClientHandler(connectionSock, this.socketList, this.totalDice);
 					Thread theThread = new Thread(handler);
 					theThread.start();
 				}

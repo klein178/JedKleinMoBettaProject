@@ -1,5 +1,5 @@
 /**
- * LiarClient.java
+ * LiarClientListener.java
  *
  * This program implements a interface for playing Liars Dice.
  *
@@ -27,55 +27,43 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Random;
+import java.util.ArrayList;
 
-public class LiarClient
+public class LiarClientListener implements Runnable
 {
+	private Socket connectionSock = null;
 
-	public static void main(String[] args)
+	LiarClientListener(Socket sock)
 	{
+		this.connectionSock = sock;
+	}
+
+	public void run()
+	{
+       		 // Wait for data from the server.  If received, output it.
 		try
 		{
-			String hostname = "localhost";
-			int port = 7654;
-
-			System.out.println("Connecting to server on port " + port);
-			Socket connectionSock = new Socket(hostname, port);
-
-			DataOutputStream serverOutput = new DataOutputStream(connectionSock.getOutputStream());
-
-			System.out.println("Connection made.");
-
-			// Start a thread to listen and display data sent by the server
-			LiarClientListener listener = new LiarClientListener(connectionSock);
-			Thread theThread = new Thread(listener);
-			theThread.start();
-
-			// Read input from the keyboard and send it to everyone else.
-			// The only way to quit is to hit control-c, but a quit command
-			// could easily be added.
-
-			Scanner keyboard = new Scanner(System.in);
-			int playerRoll[] = new int[5];
-			int playersDieCount = 5;
-
-			for (int i = 0; i < playerRoll.length; ++i)
-			{
-				Random ran = new Random();
-				playerRoll[i] = ran.nextInt(6) +1;
-			}
-
-			System.out.println("Your roll is: " + playerRoll[0] + ", " + playerRoll[1] + ", " + playerRoll[2] + ", " + playerRoll[3] + ", " + playerRoll[4]);
-
+			BufferedReader serverInput = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
 			while (true)
 			{
-				String data = keyboard.nextLine();
-				serverOutput.writeBytes(data + "\n");
+				// Get data sent from the server
+				String serverText = serverInput.readLine();
+				if (serverInput != null)
+				{
+					System.out.println(serverText);
+				}
+				else
+				{
+					// Connection was lost
+					System.out.println("Closing connection for socket " + connectionSock);
+					connectionSock.close();
+					break;
+				}
 			}
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			System.out.println(e.getMessage());
+			System.out.println("Error: " + e.toString());
 		}
 	}
-} // LiarClient
+} // LiarClientListener for LiarClient

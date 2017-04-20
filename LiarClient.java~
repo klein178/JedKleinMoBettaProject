@@ -34,6 +34,8 @@ public class LiarClient
 
 	public static void main(String[] args)
 	{
+		int bet1 = 0;
+		int bet2 = 0;
 		try
 		{
 			String hostname = "localhost";
@@ -70,7 +72,32 @@ public class LiarClient
 			while (true)
 			{
 				String data = keyboard.nextLine();
-				serverOutput.writeBytes(data + "\n");
+				String[] str = data.split(",");
+				int diQuant = Integer.parseInt(str[0]);
+				int diFace = Integer.parseInt(str[1]);
+				if (diQuant > bet1 && diFace >= bet2)
+				{
+					bet1 = diQuant;
+					bet2 = diFace;
+					serverOutput.writeBytes(data + "\n");
+				}
+			
+				else if (diQuant == bet1 && diFace > bet2)
+				{
+					bet1 = diQuant;
+					bet2 = diFace;
+					serverOutput.writeBytes(data + "\n");
+				}
+				else if (diQuant ==0 && diFace ==0)
+				{
+					bet1 = 0;
+					bet2 = 0;
+				}
+
+				else
+				{
+					System.out.println("Must increase die number or keep die number and increase the face value.\n");
+				} 
 			}
 		}
 		catch (IOException e)

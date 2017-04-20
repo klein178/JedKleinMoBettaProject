@@ -125,6 +125,9 @@ public class LiarClientHandler implements Runnable
 							if (diQuant!= 0 && diFace != 0 && invalidMove != -1)
 							{
 								clientOutput.writeBytes("Opponent wagered " + diQuant + ": " + diFace + "s" + "\n");
+								clientOutput.writeBytes("bet1 and bet2: " + bet1 + bet2 + "\n");
+								total += "test, ";
+								clientOutput.writeBytes("total dice: " + total + "\n");
 							}
 							else if (diQuant == 0 && diFace ==0)
 							{
