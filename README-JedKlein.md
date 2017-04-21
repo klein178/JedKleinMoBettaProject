@@ -1,6 +1,7 @@
   What I still need to accomplish:
   - dont let users submit bids if it isnt their turn
-  - check each turn if the game is over; if not, then proceed. if it is over, display results on client screen
+  - check each turn if the game is over; if not, then proceed. if it is over, tell each client if they won or lost and exit the program
+    (as of right now, nothing happens when the game ends)
   - bugfixes
  
  What I have accomplished so far:
@@ -8,6 +9,7 @@
   - check for valid user input
   - implement method to check dice when a user calls another users bluff
   - lots of updates to the client handler
+  - display all the dice to both clients when someone calls a bluff
   - removing dice as players lose a round
   - rerolling the dice every round, allowing for multiple rounds to be played according to the rules.
   
