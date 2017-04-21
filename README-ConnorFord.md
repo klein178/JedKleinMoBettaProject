@@ -1,7 +1,7 @@
 Authors: Jed Klein and Connor Ford
   
 What I still need to accomplish:
-  - Definitevly cap off the network at 5 players
+  - Definitevly cap off the network at 5 players (currently the game only supports 2 players)
  
 What I have accomplished so far:
   - Put in client and server with welcome message and ability for player to make inital bet
@@ -9,10 +9,7 @@ What I have accomplished so far:
   - Worked on storing information and data on the server
   - Documentation
   - rerolling the dice at the start of each round
-Challenges:
-  - Time
-  - Coding the game over the server as opposed to locally
-  - As I stated in the submission we had issues with passing the bets over the server
+  - making the game work for 2 players and sharing variables with the server
 
 Instructions for executing code:
   - once in the directory via command prompt or terminal:
