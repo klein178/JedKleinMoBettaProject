@@ -47,6 +47,7 @@ public class LiarClient
 			System.out.println("Connection made.");
 			System.out.println("Welcome to Liar's Dice!" +"\n");
 			System.out.println("Input the amount of dice you would like to bid in 1,3 format meaning there is one 3 faced die" + "\n");
+			System.out.println("As of right now, if you dont input bids correctly there will be bugs, so please follow the format" + "\n");
 			System.out.println("All bets must increase the quantity of dice; or keep the quantity the same ONLY if increasing the face value.\n");
 			System.out.println("If you want to call someones bluff, type '0,0'.\n");
 
