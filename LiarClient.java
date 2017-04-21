@@ -45,6 +45,10 @@ public class LiarClient
 			DataOutputStream serverOutput = new DataOutputStream(connectionSock.getOutputStream());
 
 			System.out.println("Connection made.");
+			System.out.println("Welcome to Liar's Dice!" +"\n");
+			System.out.println("Input the amount of dice you would like to bid in 1,3 format meaning there is one 3 faced die" + "\n");
+			System.out.println("All bets must increase the quantity of dice; or keep the quantity the same ONLY if increasing the face value.\n");
+			System.out.println("If you want to call someones bluff, type '0,0'.\n");
 
 			// Start a thread to listen and display data sent by the server
 			LiarClientListener listener = new LiarClientListener(connectionSock);
@@ -56,16 +60,6 @@ public class LiarClient
 			// could easily be added.
 
 			Scanner keyboard = new Scanner(System.in);
-			int playerRoll[] = new int[5];
-			int playersDieCount = 5;
-
-			for (int i = 0; i < playerRoll.length; ++i)
-			{
-				Random ran = new Random();
-				playerRoll[i] = ran.nextInt(6) +1;
-			}
-
-			System.out.println("Your roll is: " + playerRoll[0] + ", " + playerRoll[1] + ", " + playerRoll[2] + ", " + playerRoll[3] + ", " + playerRoll[4]);
 
 			while (true)
 			{
