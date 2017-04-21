@@ -30,25 +30,32 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class LiarClientHandler implements Runnable
 {
 	private Socket connectionSock = null;
 	private ArrayList<Socket> socketList;
-	private int[] totalDice; 
-	private int bet1 = 0;
-	private int bet2 = 0;
+	private int[] player1Roll; 
+	private int[] bets;
 	private int invalidMove = 0;	
-	private String total = "";
+	private int[] player2Roll;
+	private int order = 0;
+	private int[] player1DiceCount;
+	private int[] player2DiceCount;
 
 	// Gloabl variables for the game
 
 
-	LiarClientHandler(Socket sock, ArrayList<Socket> socketList, int[] totalDice, String total)
+	LiarClientHandler(Socket sock, ArrayList<Socket> socketList, int[] player1Roll, int[] player2Roll, int[] bets, int order, int[] player1, int[] player2)
 	{
 		this.connectionSock = sock;
 		this.socketList = socketList;
-		this.totalDice = totalDice;
-		this.total = total;
+		this.player1Roll = player1Roll;
+		this.player2Roll = player2Roll;
+		this.bets = bets;
+		this.order = order;
+		this.player1DiceCount = player1;
+		this.player2DiceCount = player2;
 	}
 
 
@@ -62,16 +69,20 @@ public class LiarClientHandler implements Runnable
 			new InputStreamReader(connectionSock.getInputStream()));
 
 			DataOutputStream localOutput = new DataOutputStream(connectionSock.getOutputStream());
-
-			localOutput.writeBytes("Welcome to Liar's Dice!" +"\n");
-			localOutput.writeBytes("Input the amount of dice you would like to roll in 1,3 format meaning there is one 3 faced di"
-			+ "\n");
-			localOutput.writeBytes("If you want to call someones bluff, type '0,0'.\n");
-		
-			Random ran = new Random();
-			for (int i = 0; i <5; ++i)
+			for (Socket s : socketList)
 			{
-				total += (ran.nextInt(6) +1);
+				DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
+				if (s == connectionSock)
+				{
+					if (order == 1)
+					{
+						clientOutput.writeBytes("Your roll is: " + player1Roll[0] +", "+ player1Roll[1] +", "+ player1Roll[2] +", "+ player1Roll[3] +", "+ player1Roll[4] + "\n");
+					}
+					if (order == 2)
+					{
+						clientOutput.writeBytes("Your roll is: " + player2Roll[0] +", "+ player2Roll[1] +", "+ player2Roll[2] +", "+ player2Roll[3] +", "+ player2Roll[4] + "\n");
+					}
+				}
 			}
 
 			while (true)
@@ -86,17 +97,17 @@ public class LiarClientHandler implements Runnable
 					int diQuant = Integer.parseInt(str[0]);
 					int diFace = Integer.parseInt(str[1]);
 
-					if (diQuant > bet1 && diFace >= bet2)
+					if (diQuant > bets[0] && diFace <= 6)
 					{
-						bet1 = diQuant;
-						bet2 = diFace;
+						bets[0] = diQuant;
+						bets[1] = diFace;
 						invalidMove = 0;
 					}
 			
-					else if (diQuant == bet1 && diFace > bet2)
+					else if (diQuant == bets[0] && diFace > bets[1] && diFace <=6)
 					{
-						bet1 = diQuant;
-						bet2 = diFace;
+						bets[0] = diQuant;
+						bets[1] = diFace;
 						invalidMove = 0;
 					}
 
@@ -104,11 +115,15 @@ public class LiarClientHandler implements Runnable
 					{
 						for (Socket s : socketList)
 						{
+							DataOutputStream checkBet = new DataOutputStream(s.getOutputStream());
 							if (s == connectionSock)
 							{
 								DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
-								clientOutput.writeBytes("Invalid bet. must increase the number of die or the face value.\n");
-								invalidMove = -1;
+								if (diQuant != 0 && diFace != 0)
+								{
+									clientOutput.writeBytes("Invalid bet. must increase the number of die or the face value.\n");
+									invalidMove = -1;
+								}
 							}
 						}
 					}
@@ -125,15 +140,134 @@ public class LiarClientHandler implements Runnable
 							if (diQuant!= 0 && diFace != 0 && invalidMove != -1)
 							{
 								clientOutput.writeBytes("Opponent wagered " + diQuant + ": " + diFace + "s" + "\n");
+	                      				 	//clientOutput.writeBytes(diQuant + "*" + diFace);
 							}
 							else if (diQuant == 0 && diFace ==0)
 							{
-								clientOutput.writeBytes("Opponent called bluff.\n");
-								bet1 = 0;
-								bet2 = 0;
+								clientOutput.writeBytes("Opponent called bluff.\n");								
 							}
 						}
+						if (diQuant == 0 && diFace ==0)
+						{	
+							DataOutputStream tellTheDice = new DataOutputStream(s.getOutputStream());
+							tellTheDice.writeBytes("The dice rolled were: " + player1Roll[0] +", "+ player1Roll[1] +", "+ player1Roll[2] +", "+ player1Roll[3] +", "+ player1Roll[4]
+							+", "+player2Roll[0] +", "+ player2Roll[1] +", "+ player2Roll[2] +", "+ player2Roll[3] +", "+ player2Roll[4] + "\n");
+						}
 					}
+					if (diQuant == 0 && diFace ==0)	
+					{
+						int numCalled = 0;
+						for(int i = 0; i < 5; ++i)
+						{
+								
+							if (player1Roll[i] == bets[1])
+							{
+								numCalled += 1;
+							}
+							if (player2Roll[i] == bets[1])
+							{
+								numCalled += 1;
+							}
+						}
+						System.out.println(numCalled);
+						if (bets[0] > numCalled) 	//this client was right to call the bluff
+						{
+							if (order == 1)
+							{
+								player2DiceCount[0] -= 1;
+							}
+							if (order == 2)
+							{
+								player1DiceCount[0] -= 1;
+							}
+						}
+						else if (bets[0] <= numCalled)	//this client was wrong to call the bluff
+						{
+							if (order == 2)
+							{
+								player2DiceCount[0] -= 1;
+							}
+							if (order == 1)
+							{
+								player1DiceCount[0] -= 1;
+							}
+						}
+						System.out.println("player1: " + player1DiceCount[0] + "player2: " + player2DiceCount[0] + "\n");
+						for (int i= 0; i < 5; ++i)
+						{
+							player1Roll[i] = 0;
+						}
+						for (int i= 0; i < 5; ++i)
+						{
+							player2Roll[i] = 0;
+						}	
+						if (order ==1)
+						{
+							for (Socket s : socketList)
+							{
+								if (s == connectionSock)
+								{
+									for (int i= 0; i < player1DiceCount[0]; ++i)
+									{
+										Random ran = new Random();
+										player1Roll[i] = ran.nextInt(6)+1;
+										System.out.println("player 1 dice roll: "+ player1Roll[i]+"\n");
+									
+									}
+									DataOutputStream tellTheDice = new DataOutputStream(s.getOutputStream());
+								tellTheDice.writeBytes("Your new roll is: " +player1Roll[0]+", "+player1Roll[1]+", "+player1Roll[2]+", "+player1Roll[3]+", "+player1Roll[4]+"\n");
+								}
+								if (s != connectionSock)
+								{
+								for (int i= 0; i < player2DiceCount[0]; ++i)
+								{
+									Random ran2 = new Random();
+									player2Roll[i] = ran2.nextInt(6)+1;
+									System.out.println("player 2 dice roll: "+ player2Roll[i]+"\n");
+									
+								}
+								
+								DataOutputStream tellTheDice = new DataOutputStream(s.getOutputStream());
+								tellTheDice.writeBytes("Your new roll is: " +player2Roll[0]+", "+player2Roll[1]+", "+player2Roll[2]+", "+player2Roll[3]+", "+player2Roll[4]+"\n");
+								}
+							}
+						}
+						else if (order ==2)
+						{
+							for (Socket s : socketList)
+							{
+								if (s == connectionSock)
+								{
+								for (int i= 0; i < player2DiceCount[0]; ++i)
+								{
+									Random ran2 = new Random();
+									player2Roll[i] = ran2.nextInt(6)+1;
+									System.out.println("player 2 dice roll: "+ player2Roll[i]+"\n");
+									
+								}
+								
+								DataOutputStream tellTheDice = new DataOutputStream(s.getOutputStream());
+								tellTheDice.writeBytes("Your new roll is: " +player2Roll[0]+", "+player2Roll[1]+", "+player2Roll[2]+", "+player2Roll[3]+", "+player2Roll[4]+"\n");
+								}
+								if (s != connectionSock)
+								{
+								for (int i= 0; i < player1DiceCount[0]; ++i)
+								{
+									Random ran2 = new Random();
+									player1Roll[i] = ran2.nextInt(6)+1;
+									System.out.println("player 1 dice roll: "+ player1Roll[i]+"\n");
+									
+								}
+								
+								DataOutputStream tellTheDice = new DataOutputStream(s.getOutputStream());
+								tellTheDice.writeBytes("Your new roll is: " +player1Roll[0]+", "+player1Roll[1]+", "+player1Roll[2]+", "+player1Roll[3]+", "+player1Roll[4]+"\n");
+								}
+							}
+						}								
+						bets[0] = 0;
+						bets[1] = 0;
+					}  
+				
 				}
 				else
 				{
