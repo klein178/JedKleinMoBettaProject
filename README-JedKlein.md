@@ -11,6 +11,14 @@
   - removing dice as players lose a round
   - rerolling the dice every round, allowing for multiple rounds to be played according to the rules.
   
+Instructions for executing code:
+
+- once in the directory via command prompt or terminal:
+- javac *.java
+- Run LiarServer
+- (Seperate Window) Run LiarClient
+- (Seperate Window) Run LiarClient
+  
   This program implements a interface for playing Liars Dice.
  
   Liars Dice is played where every player rolls 5 dice, with the values known only to the player who rolled.
