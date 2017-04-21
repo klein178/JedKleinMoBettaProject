@@ -1,12 +1,15 @@
   What I still need to accomplish:
-  - display text to the clients and server that describe what is going on in the game (who's turn, number of dice left)
+  - dont let users submit bids if it isnt their turn
   - check each turn if the game is over; if not, then proceed. if it is over, display results on client screen
+  - bugfixes
  
  What I have accomplished so far:
   - ordering the clients as they connect to the server
   - check for valid user input
   - implement method to check dice when a user calls another users bluff
   - lots of updates to the client handler
+  - removing dice as players lose a round
+  - rerolling the dice every round, allowing for multiple rounds to be played according to the rules.
   
   This program implements a interface for playing Liars Dice.
  
