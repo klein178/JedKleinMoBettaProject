@@ -28,14 +28,20 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 public class LiarServer
 {
 	// Maintain list of all client sockets for broadcast
-	private ArrayList<Socket> socketList;
-	private int[] totalDice = {0,0,0,0,0,0,0,0,0,0};
-	private String total = "";
+	private ArrayList<Socket> socketList;	
+	private int bets[] = new int[2];
+	private int player1Roll[] = new int[5];
+	private int player2Roll[] = new int[5];
+	private int player1DiceCount[] = new int[1];
+	private int player2DiceCount[] = new int[1];
 
+ 
 	public LiarServer()
 	{
 		socketList = new ArrayList<Socket>();
@@ -43,6 +49,18 @@ public class LiarServer
 
 	private void getConnection()
 	{
+		player1DiceCount[0] = 5;
+		player2DiceCount[0] = 5;
+		for (int i = 0; i < player1Roll.length; ++i)
+		{
+			Random ran = new Random();
+			player1Roll[i] = ran.nextInt(6) +1;
+		}
+		for (int i = 0; i < player2Roll.length; ++i)
+		{
+			Random ran = new Random();
+			player2Roll[i] = ran.nextInt(6) +1;
+		}
 		// Wait for a connection from the client
 		try
 		{
@@ -52,7 +70,6 @@ public class LiarServer
 
 			Socket Client1 = null;
 			Socket Client2 = null;
-			Socket Client3 = null;
 
 			// This is an infinite loop, the user will have to shut it down
 			// using control-c
@@ -68,12 +85,24 @@ public class LiarServer
 					
 					if (connectionCount ==1)
 					{
+						try
+						{
+							TimeUnit.SECONDS.sleep(1);
+						}
+						catch (InterruptedException e){}
+
 						Client1 = connectionSock;
 						DataOutputStream Client1Output = new DataOutputStream(connectionSock.getOutputStream());
 						Client1Output.writeBytes("You are first! Please wait for Player 2 to connect.\n");
 					}
 					else if (connectionCount ==2)
 					{
+						try
+						{
+							TimeUnit.SECONDS.sleep(1);
+						}
+						catch (InterruptedException e){}
+
 						Client2 = connectionSock;
 						DataOutputStream Client2Output = new DataOutputStream(connectionSock.getOutputStream());
 						Client2Output.writeBytes("You are second! Please wait for player 1's move...\n");
@@ -85,7 +114,7 @@ public class LiarServer
 
 
 					// Send to ClientHandler the socket and arraylist of all sockets
-					LiarClientHandler handler = new LiarClientHandler(connectionSock, this.socketList, this.totalDice, this.total);
+					LiarClientHandler handler = new LiarClientHandler(connectionSock, this.socketList, this.player1Roll, this.player2Roll, this.bets, connectionCount, this.player1DiceCount, 						this.player2DiceCount);
 					Thread theThread = new Thread(handler);
 					theThread.start();
 				}
