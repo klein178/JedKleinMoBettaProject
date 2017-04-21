@@ -1,7 +1,6 @@
 Authors: Jed Klein and Connor Ford
   
 What I still need to accomplish:
-  - Rerolling the dice at the start of each round
   - Definitevly cap off the network at 5 players
  
 What I have accomplished so far:
@@ -9,6 +8,7 @@ What I have accomplished so far:
   - Implemented the di method
   - Worked on storing information and data on the server
   - Documentation
+  - rerolling the dice at the start of each round
 Challenges:
   - Time
   - Coding the game over the server as opposed to locally
