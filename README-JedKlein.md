@@ -1,13 +1,12 @@
   What I still need to accomplish:
-  
   - display text to the clients and server that describe what is going on in the game (who's turn, number of dice left)
+  - check each turn if the game is over; if not, then proceed. if it is over, display results on client screen
+ 
+ What I have accomplished so far:
+  - ordering the clients as they connect to the server
   - check for valid user input
   - implement method to check dice when a user calls another users bluff
-  - check each turn if the game is over; if not, then proceed. if it is over, display results on client screen
-  
-  What I have accomplished so far:
-  - ordering the clients as they connect to the server
-  
+  - lots of updates to the client handler
   
   This program implements a interface for playing Liars Dice.
  
