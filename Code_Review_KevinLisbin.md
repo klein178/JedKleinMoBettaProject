@@ -1,6 +1,6 @@
-Project name:
-Programmers:
-Code Reviewer:
+Project name:Liars Dice
+Programmers: Jed Klein, Connor Ford
+Code Reviewer: Kevin Lisbin
 
 On a scale of 1 to 5, I give this code a rating of 5 based on the following criteria:
 
