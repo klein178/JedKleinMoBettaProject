@@ -1,10 +1,8 @@
   What I still need to accomplish:
-  - dont let users submit bids if it isnt their turn
-  - check each turn if the game is over; if not, then proceed. if it is over, tell each client if they won or lost and exit the program
-    (as of right now, nothing happens when the game ends)
-  - bugfixes
  
  What I have accomplished so far:
+  - block all invalid input
+  - display a message when the game is over
   - ordering the clients as they connect to the server
   - check for valid user input
   - implement method to check dice when a user calls another users bluff
